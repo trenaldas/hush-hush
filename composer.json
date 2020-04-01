@@ -1,7 +1,7 @@
 {
     "name": "trenaldas/hush-hush",
     "description": "AWS Secrets Manager helper",
-    "type": "project",
+    "license": "MIT",
     "authors": [
         {
             "name": "Renaldas Tauras",
