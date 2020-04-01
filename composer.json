@@ -1,0 +1,25 @@
+{
+    "name": "trenaldas/hush-hush",
+    "description": "AWS Secrets Manager helper",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Renaldas Tauras",
+            "email": "t.renaldas@gmail.com"
+        }
+    ],
+    "keywords": ["Laravel", "hush-hush", "Secrets Manager", "AWS"],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "trenaldas\\HushHush\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "vendor\\hush-hush\\HushHushServiceProvider"
+            ]
+        }
+    }
+}
