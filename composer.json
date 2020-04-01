@@ -18,7 +18,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "vendor\\hush-hush\\HushHushServiceProvider"
+                "trenaldas\\HushHush\\HushHushServiceProvider"
             ]
         }
     }
