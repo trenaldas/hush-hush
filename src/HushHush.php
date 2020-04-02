@@ -18,7 +18,7 @@ class HushHush
                 'region'  => env('AWS_REGION', 'eu-west-1'),
             ];
 
-        if (config('Hush-Hush.credentials')) {
+        if (config('hushhush.credentials')) {
             $clientConfig['credentials'] = [
                     'key'    => env('AWS_ACCESS_KEY_ID'),
                     'secret' => env('AWS_SECRET_ACCESS_KEY'),
@@ -78,9 +78,14 @@ class HushHush
 
     public function setDatabaseLoginDetails()
     {
-        if (config('hush-hush.database.connection') && config('hush-hush.database.secret')) {
+        if (config('hushhush.database.connection') && config('hushhush.database.secret')) {
             $secret = $this->openSecret(config('hush-hush.database.secret'));
-
+            config(
+                [
+                    'database.connections.mysql.username' => $secret['username'],
+                    'database.connections.mysql.password' => $secret['password'],
+                ]
+            );
         }
     }
 }

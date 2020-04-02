@@ -18,17 +18,11 @@ Requirements
 Installation
 ============
 
-    composer require trenaldas/hush-hush
-
-Add the service provider in your config/app.php
-
-Service Provider
-
-    trenaldas/HushHush/HushHushServiceProvider
+    php artisan hush-hush:install
+This will publish config file to config/hushhush.php
 
 
 Usage
 =====
 
 TBA
-

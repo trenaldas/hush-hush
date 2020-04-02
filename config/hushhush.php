@@ -11,8 +11,8 @@ return [
     */
 
     'database' => [
-        'connection' => 'mysql',
-        'secret'     => 'hush-hush-secret',
+        'connection' => env('HH_DB_CONNECTION', null),
+        'secret'     => env('HH_DB_SECRET', null),
     ],
 
     /*

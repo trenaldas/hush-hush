@@ -24,7 +24,7 @@ class HushHushServiceProvider extends ServiceProvider
         );
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/hushhush.php', 'hush-hush'
+            __DIR__ . '/../config/hushhush.php', 'hushhush'
         );
     }
 
@@ -33,7 +33,7 @@ class HushHushServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(HushHush $hushHush)
     {
         $this->publishes(
             [
@@ -47,6 +47,6 @@ class HushHushServiceProvider extends ServiceProvider
 //                ),
 //            ],'hush-hush-provider');
 
-//        $hushHush->setDatabaseLoginDetails();
+        $hushHush->setDatabaseLoginDetails();
     }
 }
