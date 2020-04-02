@@ -35,5 +35,4 @@ return [
         'name_of_secret' => 'hush-hush-secret',
     ],
 
-    'credentials' => false,
 ];
