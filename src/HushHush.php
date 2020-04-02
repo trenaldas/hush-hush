@@ -73,12 +73,25 @@ class HushHush
     {
         if (config('hushhush.database.connection') && config('hushhush.database.secret')) {
             $secret = json_decode($this->openSecret(config('hushhush.database.secret')));
+            $connection = config('hushhush.database.connection');
             config(
                 [
-                    'database.connections.mysql.username' => $secret->username,
-                    'database.connections.mysql.password' => $secret->password,
+                    'database.connections.' . $connection . '.username' => $secret->username,
+                    'database.connections.' . $connection . '.password' => $secret->password,
                 ]
             );
+        }
+    }
+
+    public function createHushHushes()
+    {
+        $secrets = config('hushhush.secrets');
+        if (sizeof($secrets) > 0) {
+            foreach ($secrets as $name => $secret)
+            {
+                $openedSecret = $this->openSecret($secret);
+                config(['hushhush.show.secret.' . $name => $openedSecret]);
+            }
         }
     }
 }

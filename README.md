@@ -25,4 +25,17 @@ This will publish config file to config/hushhush.php
 Usage
 =====
 
-TBA
+#### For database login details
+
+To use login details from AWS secret manager create following variables in your .env file:
+    
+    HH_DB_CONNECTION = 
+    HH_DB_SECRET = 
+    
+HH_DB_CONNECTION - the connection you want to use the secret for (mysql, sqlite...)
+
+HH_DB_SECRET - AWS secret name
+
+#### For any other secret to store
+
+In order to retrieve and store secret for future use you have to insert it to config file config/hushhush.php

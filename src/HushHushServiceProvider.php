@@ -32,6 +32,8 @@ class HushHushServiceProvider extends ServiceProvider
      * Bootstrap services.
      *
      * @return void
+     *
+     * @param HushHush $hushHush
      */
     public function boot(HushHush $hushHush)
     {
@@ -40,13 +42,7 @@ class HushHushServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/hushhush.php' => config_path('hushhush.php'),
             ],'hush-hush-config');
 
-//        $this->publishes(
-//            [
-//                __DIR__ . '/HushHushServiceProvider.stub' => app_path(
-//                    'Providers/HushHushServiceProvider.php'
-//                ),
-//            ],'hush-hush-provider');
-
         $hushHush->setDatabaseLoginDetails();
+        $hushHush->createHushHushes();
     }
 }

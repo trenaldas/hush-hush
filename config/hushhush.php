@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Hush-Hush general configs
+    | Hush-Hush database connection details
     |--------------------------------------------------------------------------
     |
     | You can assign database connection to use secret login details
@@ -17,22 +17,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Hush-Hush general configs
+    | Hush-Hush secrets storage
     |--------------------------------------------------------------------------
     |
     | You can assign secrets, and later get them from config
     | Example:
     |
-    | 'secret' => [
-    |    'name_of_secret' => 'hush-hush-secret',
-    |    'name_of_another_secret' => 'hush-hush-super-secret',
-    | ],
+    | 'secrets' => [
+    |   'name_of_secret' => 'hush-hush-secret',
+    ],
     |
-    | config('hush-hush.secret.name_of_secret')
+    | Get the values of your secrets:
+    |--------------------------------------------------------------------------
+    | config('hush-hush.show.name_of_secret')
     */
 
-    'secret' => [
-        'name_of_secret' => 'hush-hush-secret',
+    'secrets' => [
+        //
     ],
 
 ];
