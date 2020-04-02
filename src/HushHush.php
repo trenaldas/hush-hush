@@ -2,6 +2,7 @@
 
 namespace trenaldas\HushHush;
 
+use Aws\Credentials\Credentials;
 use Aws\Exception\AwsException;
 use Aws\SecretsManager\SecretsManagerClient;
 
@@ -19,10 +20,10 @@ class HushHush
             ];
 
         if (config('hushhush.credentials')) {
-            $clientConfig['credentials'] = [
-                    'key'    => env('AWS_ACCESS_KEY_ID'),
-                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ];
+            $clientConfig['credentials'] = new Credentials(
+                env('AWS_ACCESS_KEY_ID'),
+                env('AWS_SECRET_ACCESS_KEY')
+            );
         }
 
         $this->client = new SecretsManagerClient($clientConfig);
