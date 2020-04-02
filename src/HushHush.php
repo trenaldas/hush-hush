@@ -79,11 +79,11 @@ class HushHush
     public function setDatabaseLoginDetails()
     {
         if (config('hushhush.database.connection') && config('hushhush.database.secret')) {
-            $secret = $this->openSecret(config('hush-hush.database.secret'));
+            $secret = json_decode($this->openSecret(config('hushhush.database.secret')));
             config(
                 [
-                    'database.connections.mysql.username' => $secret['username'],
-                    'database.connections.mysql.password' => $secret['password'],
+                    'database.connections.mysql.username' => $secret->username,
+                    'database.connections.mysql.password' => $secret->password,
                 ]
             );
         }
