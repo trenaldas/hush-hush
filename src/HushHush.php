@@ -9,6 +9,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class HushHush
 {
+    /** @var string */
+    public const YML_PATH = base_path . '/hush-hush.yml';
+
     /** @var SecretsManagerClient */
     private $client;
 
@@ -17,20 +20,20 @@ class HushHush
 
     public function __construct()
     {
-        $this->ymlFileExist = file_exists(base_path() . '/hush-hush.yml');
-        $clientConfig =
+        $this->ymlFileExist = file_exists(self::YML_PATH);
+
+        $this->client = new SecretsManagerClient(
             [
                 'version' => '2017-10-17',
-                'region'  => env('AWS_REGION', 'eu-west-1'),
-            ];
-
-        $this->client = new SecretsManagerClient($clientConfig);
+                'region'  => env('AWS_DEFAULT_REGION', 'eu-west-1'),
+            ]
+        );
     }
 
     public function setDatabaseLoginDetails() : void
     {
         if ($this->ymlFileExist) {
-            $hushHushYml = Yaml::parseFile(base_path() . '/hush-hush.yml');
+            $hushHushYml = Yaml::parseFile(self::YML_PATH);
             if (isset($hushHushYml['database']['connection'][App::environment()])) {
                 $secret = json_decode($this->openSecret($hushHushYml['database']['connection'][App::environment()]));
                 config(
@@ -49,11 +52,11 @@ class HushHush
     public function uncover(string $localSecretName)
     {
         if ($this->ymlFileExist) {
-            $hushHushSecrets = Yaml::parseFile(base_path() . '/hush-hush.yml');
+            $hushHushSecrets = Yaml::parseFile(self::YML_PATH);
             if (isset($hushHushSecrets['secrets'][$localSecretName])) {
                 $secret = $hushHushSecrets['secrets'][$localSecretName];
 
-                return $this->openSecret($secret[App::environment()]);
+                return json_decode($this->openSecret($secret[App::environment()]));
             }
         }
 

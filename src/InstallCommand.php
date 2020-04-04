@@ -20,7 +20,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Installs and publishes all of the Hush-Hush resources';
+    protected $description = 'Installs and publishes Hush-Hush resources';
 
     /**
      * Execute the console command.
@@ -29,11 +29,17 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        $this->comment('Creating hush-hush.yml file in your root directory');
-        file_put_contents(base_path() . '/hush-hush.yml', '');
+        if (! file_exists(HushHush::YML_PATH)) {
+            $this->comment('Creating hush-hush.yml file in your root directory');
+            file_put_contents(HushHush::YML_PATH, '');
+        }
 
         $this->comment('Publishing hush-hush.php config file.');
         $this->callSilent('vendor:publish', ['--tag' => 'hush-hush-config']);
+
+        $this->comment('----------------------------------------------------');
+        $this->comment('- Check config/hush-hush.php file for environments -');
+        $this->comment('----------------------------------------------------');
 
         $this->comment('
   _   _           _           _   _           _

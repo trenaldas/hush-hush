@@ -29,9 +29,14 @@ class CreateSecretCommand extends Command
      */
     public function handle()
     {
-        $hushHushYml  = Yaml::parseFile(base_path() . '/hush-hush.yml');
-        $secretName   = $this->ask('Enter local name for your secret');
+        if (! file_exists(HushHush::YML_PATH)) {
+            $this->comment('File hush-hush.yml does not exist. Run command php artisan hush-hush:install');
+            return;
+        }
+
+        $hushHushYml  = Yaml::parseFile(HushHush::YML_PATH);
         $environments = (config('hush-hush.environments'));
+        $secretName   = $this->ask('Enter local name for your secret');
 
         $this->comment('Enter AWS secret name for different environments:');
         foreach ($environments as $environment)
@@ -40,6 +45,6 @@ class CreateSecretCommand extends Command
         }
 
         $hushHushYml = Yaml::dump($hushHushYml, 3);
-        file_put_contents(base_path() . '/hush-hush.yml', $hushHushYml);
+        file_put_contents(HushHush::YML_PATH, $hushHushYml);
     }
 }

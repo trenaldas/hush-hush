@@ -28,7 +28,12 @@ class SetDatabaseSecretCommand extends Command
      */
     public function handle()
     {
-        $ymlContent = [];
+        if (! file_exists(HushHush::YML_PATH)) {
+            $this->comment('File hush-hush.yml does not exist. Run command php artisan hush-hush:install');
+            return;
+        }
+
+        $ymlContent = file_get_contents(HushHush::YML_PATH);
         $connections = config('database.connections');
         $ymlContent['database']['connection']  = $this->choice('Select database connection driver:', array_keys($connections), 'mysql');
 
@@ -41,7 +46,7 @@ class SetDatabaseSecretCommand extends Command
         }
 
         $ymlContent = Yaml::dump($ymlContent, 3);
-        file_put_contents(base_path() . '/hush-hush.yml', $ymlContent);
+        file_put_contents(HushHush::YML_PATH, $ymlContent);
 
         $this->comment('
   _   _           _           _   _           _
