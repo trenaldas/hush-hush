@@ -18,7 +18,11 @@ Requirements
 Installation
 ============
 
-Use command:
+Use Composer to install Hush-Huhs to your Laracel project
+
+    composer require trenaldas/hush-hush
+
+After installing Hush-Hush Composer package, use command below:
 
     php artisan hush-hush:install
 

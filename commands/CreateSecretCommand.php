@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
 
-class CreateSecretCommandCommand extends Command
+class CreateSecretCommand extends Command
 {
     /**
      * The name and signature of the console command.
