@@ -4,6 +4,7 @@ namespace trenaldas\HushHush;
 
 use Aws\Exception\AwsException;
 use Aws\SecretsManager\SecretsManagerClient;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\Yaml\Yaml;
 
 class HushHush
@@ -30,7 +31,7 @@ class HushHush
     {
         if ($this->ymlFileExist) {
             $hushHushYml = Yaml::parseFile(base_path() . '/hush-hush.yml');
-            if ($hushHushYml['database']['connection'][App::environment()]) {
+            if (isset($hushHushYml['database']['connection'][App::environment()])) {
                 $secret = json_decode($this->openSecret($hushHushYml['database']['connection'][App::environment()]));
                 config(
                     [
@@ -45,7 +46,7 @@ class HushHush
     /**
      * @return null|string
      */
-    public function uncover(sring $localSecretName)
+    public function uncover(string $localSecretName)
     {
         if ($this->ymlFileExist) {
             $hushHushSecrets = Yaml::parseFile(base_path() . '/hush-hush.yml');
