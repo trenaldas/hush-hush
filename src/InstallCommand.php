@@ -27,11 +27,11 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(HushHush $hushHush)
     {
-        if (! file_exists(HushHush::YML_PATH)) {
+        if (! file_exists($hushHush->hushHushYmlPath)) {
             $this->comment('Creating hush-hush.yml file in your root directory');
-            file_put_contents(HushHush::YML_PATH, '');
+            file_put_contents($hushHush->hushHushYmlPath, '');
         }
 
         $this->comment('Publishing hush-hush.php config file.');

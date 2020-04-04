@@ -27,14 +27,14 @@ class CreateSecretCommand extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(HushHush $hushHush)
     {
-        if (! file_exists(HushHush::YML_PATH)) {
+        if (! file_exists($hushHush->hushHushYmlPath)) {
             $this->comment('File hush-hush.yml does not exist. Run command php artisan hush-hush:install');
             return;
         }
 
-        $hushHushYml  = Yaml::parseFile(HushHush::YML_PATH);
+        $hushHushYml  = Yaml::parseFile($hushHush->hushHushYmlPath);
         $environments = (config('hush-hush.environments'));
         $secretName   = $this->ask('Enter local name for your secret');
 
@@ -45,6 +45,6 @@ class CreateSecretCommand extends Command
         }
 
         $hushHushYml = Yaml::dump($hushHushYml, 3);
-        file_put_contents(HushHush::YML_PATH, $hushHushYml);
+        file_put_contents($hushHush->hushHushYmlPath, $hushHushYml);
     }
 }

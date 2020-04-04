@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 class HushHush
 {
     /** @var string */
-    public const YML_PATH = base_path . '/hush-hush.yml';
+    public $hushHushYmlPath;
 
     /** @var SecretsManagerClient */
     private $client;
@@ -20,7 +20,8 @@ class HushHush
 
     public function __construct()
     {
-        $this->ymlFileExist = file_exists(self::YML_PATH);
+        $this->hushHushYmlPath = base_path() . '/hush-hush.yml';
+        $this->ymlFileExist    = file_exists($this->hushHushYmlPath);
 
         $this->client = new SecretsManagerClient(
             [
@@ -33,7 +34,7 @@ class HushHush
     public function setDatabaseLoginDetails() : void
     {
         if ($this->ymlFileExist) {
-            $hushHushYml = Yaml::parseFile(self::YML_PATH);
+            $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
             if (isset($hushHushYml['database']['connection'][App::environment()])) {
                 $secret = json_decode($this->openSecret($hushHushYml['database']['connection'][App::environment()]));
                 config(
@@ -52,7 +53,7 @@ class HushHush
     public function uncover(string $localSecretName)
     {
         if ($this->ymlFileExist) {
-            $hushHushSecrets = Yaml::parseFile(self::YML_PATH);
+            $hushHushSecrets = Yaml::parseFile($this->hushHushYmlPath);
             if (isset($hushHushSecrets['secrets'][$localSecretName])) {
                 $secret = $hushHushSecrets['secrets'][$localSecretName];
 
