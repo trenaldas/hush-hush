@@ -48,6 +48,5 @@ class HushHushServiceProvider extends ServiceProvider
             ],'hush-hush-config');
 
         $hushHush->setDatabaseLoginDetails();
-        $hushHush->createHushHushes();
     }
 }

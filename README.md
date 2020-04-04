@@ -18,30 +18,28 @@ Requirements
 Installation
 ============
 
-    php artisan hush-hush:install
-This will publish config file to config/hushhush.php
+Use command:
 
+    php artisan hush-hush:install
+
+This will publish config file to `config/hush-hush.php` and will create empty `hush-hush.yml` file in your root directory.
 
 Usage
 =====
 
 #### For database login details
 
-To use login details from AWS secret manager create following variables in your .env file:
+Use command:
     
-    HH_DB_CONNECTION = 
-    HH_DB_SECRET = 
-    
-HH_DB_CONNECTION - the connection you want to use the secret for (mysql, sqlite...)
-
-HH_DB_SECRET - AWS secret name
+    php artisan hush-hush:database
 
 #### For any other secret to store
 
-In order to retrieve and store secret for future use you have to insert it to config file config/hushhush.php
+Use command: 
+    
+    php artisan hush-hush:create_secret
 
-
-.yml file example
+#### .yml file example
 
     database:
       name: mysql
@@ -62,3 +60,4 @@ In order to retrieve and store secret for future use you have to insert it to co
           local: hush-hush-super-local
           staging: hush-hush-super-staging
           production: hush-hush-super-production
+          

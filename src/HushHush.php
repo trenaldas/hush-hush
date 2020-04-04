@@ -11,8 +11,12 @@ class HushHush
     /** @var SecretsManagerClient */
     private $client;
 
+    /** @var bool */
+    private $ymlFileExist = false;
+
     public function __construct()
     {
+        $this->ymlFileExist = file_exists(base_path() . '/hush-hush.yml');
         $clientConfig =
             [
                 'version' => '2017-10-17',
@@ -22,27 +26,36 @@ class HushHush
         $this->client = new SecretsManagerClient($clientConfig);
     }
 
-    public function setDatabaseLoginDetails()
+    public function setDatabaseLoginDetails() : void
     {
-        $hushHushYml = Yaml::parseFile(base_path() . '/hush-hush.yml');
-        if ($hushHushYml['database']['connection'][App::environment()]) {
-            $secret = json_decode($this->openSecret($hushHushYml['database']['connection'][App::environment()]));
-            config(
-                [
-                    'database.connections.' . $hushHushYml['database']['connection'] . '.username' => $secret->username,
-                    'database.connections.' . $hushHushYml['database']['connection'] . '.password' => $secret->password,
-                ]
-            );
+        if ($this->ymlFileExist) {
+            $hushHushYml = Yaml::parseFile(base_path() . '/hush-hush.yml');
+            if ($hushHushYml['database']['connection'][App::environment()]) {
+                $secret = json_decode($this->openSecret($hushHushYml['database']['connection'][App::environment()]));
+                config(
+                    [
+                        'database.connections.' . $hushHushYml['database']['connection'] . '.username' => $secret->username,
+                        'database.connections.' . $hushHushYml['database']['connection'] . '.password' => $secret->password,
+                    ]
+                );
+            }
         }
     }
 
-    public function uncover($localSecretName)
+    /**
+     * @return null|string
+     */
+    public function uncover(sring $localSecretName)
     {
-        $hushHushSecrets = Yaml::parseFile(base_path() . '/hush-hush.yml');
+        if ($this->ymlFileExist) {
+            $hushHushSecrets = Yaml::parseFile(base_path() . '/hush-hush.yml');
 
-        $secret = $hushHushSecrets['secrets'][$localSecretName];
-        return $this->openSecret($secret[App::environment()]);
+            $secret = $hushHushSecrets['secrets'][$localSecretName];
 
+            return $this->openSecret($secret[App::environment()]);
+        }
+
+        return null;
     }
 
     private function openSecret(string $secretName)
