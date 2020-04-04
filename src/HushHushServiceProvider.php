@@ -4,6 +4,9 @@ namespace trenaldas\HushHush;
 
 use Illuminate\Contracts\Container\BindingResolutionException as BindingResolutionExceptionAlias;
 use Illuminate\Support\ServiceProvider;
+use trenaldas\HushHush\Commands\CreateSecretCommand;
+use trenaldas\HushHush\Commands\InstallCommand;
+use trenaldas\HushHush\Commands\SetDatabaseSecretCommand;
 
 class HushHushServiceProvider extends ServiceProvider
 {
@@ -19,9 +22,9 @@ class HushHushServiceProvider extends ServiceProvider
 
         $this->commands(
             [
-                Commands\InstallCommand::class,
-                Commands\SetDatabaseSecretCommand::class,
-                Commands\CreateSecretCommand::class,
+                InstallCommand::class,
+                SetDatabaseSecretCommand::class,
+                CreateSecretCommand::class,
             ]
         );
 
