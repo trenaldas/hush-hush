@@ -43,7 +43,9 @@ class CreateSecretCommand extends Command
             $hushHushYml['secrets'][$secretName][$environment] = $this->ask("{$environment}");
         }
 
-        $hushHushYml = Yaml::dump($hushHushYml, 3);
-        file_put_contents(base_path() . '/hush-hush.yml', $hushHushYml);
+        file_put_contents(
+            base_path() . '/hush-hush.yml',
+            Yaml::dump($hushHushYml, 3)
+        );
     }
 }

@@ -33,7 +33,7 @@ class SetDatabaseSecretCommand extends Command
             return;
         }
 
-        $ymlContent = file_get_contents(base_path() . '/hush-hush.yml');
+        $ymlContent  = Yaml::parseFile(base_path() . '/hush-hush.yml');
         $connections = config('database.connections');
         $ymlContent['database']['connection']  = $this->choice('Select database connection:', array_keys($connections), 'mysql');
 
@@ -45,17 +45,9 @@ class SetDatabaseSecretCommand extends Command
             $ymlContent['database']['environments'][$environment] = $this->ask("{$environment}");
         }
 
-        $ymlContent = Yaml::dump($ymlContent, 3);
-        file_put_contents(base_path() . '/hush-hush.yml', $ymlContent);
-
-        $this->comment('
-  _   _           _           _   _           _
- | | | |_   _ ___| |__       | | | |_   _ ___| |__
- | |_| | | | / __| \'_ \ _____| |_| | | | / __| \'_ \
- |  _  | |_| \__ \ | | |_____|  _  | |_| \__ \ | | |
- |_| |_|\__,_|___/_| |_|     |_| |_|\__,_|___/_| |_|
-
-                                                    ');
-        $this->callSilent('vendor:publish', ['--tag' => 'hush-hush-config']);
+        file_put_contents(
+            base_path() . '/hush-hush.yml',
+            Yaml::dump($ymlContent, 3)
+        );
     }
 }
