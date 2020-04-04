@@ -4,6 +4,9 @@ namespace trenaldas\HushHush;
 
 use Illuminate\Contracts\Container\BindingResolutionException as BindingResolutionExceptionAlias;
 use Illuminate\Support\ServiceProvider;
+use trenaldas\HushHush\Commands\CreateSecretCommandCommand;
+use trenaldas\HushHush\Commands\SetDatabaseSecretCommand;
+use trenaldas\HushHush\Commands\InstallCommand;
 
 class HushHushServiceProvider extends ServiceProvider
 {
@@ -20,11 +23,13 @@ class HushHushServiceProvider extends ServiceProvider
         $this->commands(
             [
                 InstallCommand::class,
+                SetDatabaseSecretCommand::class,
+                CreateSecretCommandCommand::class,
             ]
         );
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/hushhush.php', 'hushhush'
+            __DIR__ . '/../config/hush-hush.php', 'hushhush'
         );
     }
 
@@ -39,7 +44,7 @@ class HushHushServiceProvider extends ServiceProvider
     {
         $this->publishes(
             [
-                __DIR__ . '/../config/hushhush.php' => config_path('hushhush.php'),
+                __DIR__ . '/../config/hush-hush.php' => config_path('hush-hush.php'),
             ],'hush-hush-config');
 
         $hushHush->setDatabaseLoginDetails();

@@ -39,3 +39,26 @@ HH_DB_SECRET - AWS secret name
 #### For any other secret to store
 
 In order to retrieve and store secret for future use you have to insert it to config file config/hushhush.php
+
+
+.yml file example
+
+    database:
+      name: mysql
+      environemts:
+          local: hush-hush-secret-local
+          staging: hush-hush-secret-staging
+          production: hush-hush-secret-production
+    secrets:
+      secret_name:
+        local_name: app-secret
+        environments:
+          local: hush-hush-local
+          staging: hush-hush-staging
+          production: hush-hush-production
+      super_secret_name:
+        local_name: my-api-login
+        environments:
+          local: hush-hush-super-local
+          staging: hush-hush-super-staging
+          production: hush-hush-super-production

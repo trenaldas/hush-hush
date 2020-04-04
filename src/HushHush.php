@@ -4,6 +4,7 @@ namespace trenaldas\HushHush;
 
 use Aws\Exception\AwsException;
 use Aws\SecretsManager\SecretsManagerClient;
+use Symfony\Component\Yaml\Yaml;
 
 class HushHush
 {
@@ -21,7 +22,30 @@ class HushHush
         $this->client = new SecretsManagerClient($clientConfig);
     }
 
-    public function openSecret(string $secretName)
+    public function setDatabaseLoginDetails()
+    {
+        $hushHushYml = Yaml::parseFile(base_path() . '/hush-hush.yml');
+        if ($hushHushYml['database']['connection'][App::environment()]) {
+            $secret = json_decode($this->openSecret($hushHushYml['database']['connection'][App::environment()]));
+            config(
+                [
+                    'database.connections.' . $hushHushYml['database']['connection'] . '.username' => $secret->username,
+                    'database.connections.' . $hushHushYml['database']['connection'] . '.password' => $secret->password,
+                ]
+            );
+        }
+    }
+
+    public function uncover($localSecretName)
+    {
+        $hushHushSecrets = Yaml::parseFile(base_path() . '/hush-hush.yml');
+
+        $secret = $hushHushSecrets['secrets'][$localSecretName];
+        return $this->openSecret($secret[App::environment()]);
+
+    }
+
+    private function openSecret(string $secretName)
     {
         try {
             $result = $this->client->getSecretValue(
@@ -67,31 +91,5 @@ class HushHush
         }
 
         return $secret;
-    }
-
-    public function setDatabaseLoginDetails()
-    {
-        if (config('hushhush.database.connection') && config('hushhush.database.secret')) {
-            $secret = json_decode($this->openSecret(config('hushhush.database.secret')));
-            $connection = config('hushhush.database.connection');
-            config(
-                [
-                    'database.connections.' . $connection . '.username' => $secret->username,
-                    'database.connections.' . $connection . '.password' => $secret->password,
-                ]
-            );
-        }
-    }
-
-    public function createHushHushes()
-    {
-        $secrets = config('hushhush.secrets');
-        if (sizeof($secrets) > 0) {
-            foreach ($secrets as $name => $secret)
-            {
-                $openedSecret = $this->openSecret($secret);
-                config(['hushhush.show.secret.' . $name => $openedSecret]);
-            }
-        }
     }
 }
