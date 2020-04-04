@@ -35,7 +35,7 @@ class SetDatabaseSecretCommand extends Command
 
         $ymlContent = file_get_contents(base_path() . '/hush-hush.yml');
         $connections = config('database.connections');
-        $ymlContent['database']['connection']  = $this->choice('Select database connection driver:', array_keys($connections), 'mysql');
+        $ymlContent['database']['connection']  = $this->choice('Select database connection:', array_keys($connections), 'mysql');
 
         $this->comment('Enter AWS secret name for different environments:');
         $environments = (config('hush-hush.environments'));

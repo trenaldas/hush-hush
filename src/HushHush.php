@@ -35,8 +35,9 @@ class HushHush
     {
         if ($this->ymlFileExist) {
             $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
-            if (isset($hushHushYml['database']['connection'][App::environment()])) {
-                $secret = json_decode($this->openSecret($hushHushYml['database']['connection'][App::environment()]));
+            if (isset($hushHushYml['database']['connection']) &&
+                isset($hushHushYml['database']['environments'][App::environment()])) {
+                $secret = json_decode($this->openSecret($hushHushYml['database']['environments'][App::environment()]));
                 config(
                     [
                         'database.connections.' . $hushHushYml['database']['connection'] . '.username' => $secret->username,
