@@ -70,3 +70,15 @@ secrets:
       staging: hush-hush-super-staging
       production: hush-hush-super-production       
 ```
+
+## Authors
+
+* **Renaldas Tauras** - *Initial work* - [trenaldas](https://github.com/trenaldas)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Thanks to my tech team for ideas and support

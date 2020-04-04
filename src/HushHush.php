@@ -31,7 +31,10 @@ class HushHush
         );
     }
 
-    public function setDatabaseLoginDetails() : void
+    /**
+     * @return void
+     */
+    public function setDatabaseLoginDetails()
     {
         if ($this->ymlFileExist) {
             $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
@@ -49,7 +52,7 @@ class HushHush
     }
 
     /**
-     * @return null|string
+     * @return null|object
      */
     public function uncover(string $localSecretName)
     {
@@ -65,6 +68,11 @@ class HushHush
         return null;
     }
 
+    /**
+     * @throws AwsException
+     *
+     * @return false|mixed|string
+     */
     private function openSecret(string $secretName)
     {
         try {

@@ -34,8 +34,6 @@ class HushHushServiceProvider extends ServiceProvider
      * Bootstrap services.
      *
      * @return void
-     *
-     * @param HushHush $hushHush
      */
     public function boot(HushHush $hushHush)
     {
