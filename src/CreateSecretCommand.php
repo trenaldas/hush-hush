@@ -3,7 +3,6 @@
 namespace trenaldas\HushHush;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
 
 class CreateSecretCommand extends Command
@@ -27,14 +26,14 @@ class CreateSecretCommand extends Command
      *
      * @return void
      */
-    public function handle(HushHush $hushHush)
+    public function handle()
     {
-        if (! file_exists($hushHush->hushHushYmlPath)) {
+        if (! file_exists(base_path() . '/hush-hush.yml')) {
             $this->comment('File hush-hush.yml does not exist. Run command php artisan hush-hush:install');
             return;
         }
 
-        $hushHushYml  = Yaml::parseFile($hushHush->hushHushYmlPath);
+        $hushHushYml  = Yaml::parseFile(base_path() . '/hush-hush.yml');
         $environments = (config('hush-hush.environments'));
         $secretName   = $this->ask('Enter local name for your secret');
 
@@ -45,6 +44,6 @@ class CreateSecretCommand extends Command
         }
 
         $hushHushYml = Yaml::dump($hushHushYml, 3);
-        file_put_contents($hushHush->hushHushYmlPath, $hushHushYml);
+        file_put_contents(base_path() . '/hush-hush.yml', $hushHushYml);
     }
 }

@@ -3,7 +3,6 @@
 namespace trenaldas\HushHush;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
 
 class InstallCommand extends Command
@@ -27,11 +26,11 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    public function handle(HushHush $hushHush)
+    public function handle()
     {
-        if (! file_exists($hushHush->hushHushYmlPath)) {
+        if (! file_exists(base_path() . '/hush-hush.yml')) {
             $this->comment('Creating hush-hush.yml file in your root directory');
-            file_put_contents($hushHush->hushHushYmlPath, '');
+            file_put_contents(base_path() . '/hush-hush.yml', '');
         }
 
         $this->comment('Publishing hush-hush.php config file.');
