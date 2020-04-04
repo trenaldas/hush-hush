@@ -50,10 +50,11 @@ class HushHush
     {
         if ($this->ymlFileExist) {
             $hushHushSecrets = Yaml::parseFile(base_path() . '/hush-hush.yml');
+            if (isset($hushHushSecrets['secrets'][$localSecretName])) {
+                $secret = $hushHushSecrets['secrets'][$localSecretName];
 
-            $secret = $hushHushSecrets['secrets'][$localSecretName];
-
-            return $this->openSecret($secret[App::environment()]);
+                return $this->openSecret($secret[App::environment()]);
+            }
         }
 
         return null;

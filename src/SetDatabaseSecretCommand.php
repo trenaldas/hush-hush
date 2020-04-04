@@ -1,6 +1,6 @@
 <?php
 
-namespace trenaldas\HushHush\Commands;
+namespace trenaldas\HushHush;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Yaml\Yaml;
