@@ -12,8 +12,7 @@
     "require": {
         "php": ">=7.3",
         "aws/aws-sdk-php": "^3.133",
-        "symfony/yaml": "^5.0",
-        "laravel/framework": "^6.0"
+        "symfony/yaml": "^5.0"
     },
     "autoload": {
         "psr-4": {
