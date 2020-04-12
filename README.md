@@ -9,15 +9,10 @@ Hush-Hush For Laravel
 
 Composer package to help with AWS Secrets Manager service secrets (hush-hushes)
 
-Requirements
-============
-
-* PHP >= 7.3
-
 Installation
 ============
 
-Use Composer to install Hush-Huhs to your Laracel project
+Use Composer to install Hush-Huhs to your Laravel project
 
     composer require trenaldas/hush-hush
 
@@ -45,6 +40,11 @@ Use command:
 Use command: 
     
     php artisan hush-hush:create_secret
+    
+#### To get secrets anywhere in your code
+
+Use class HushHush function `unover('localSecretName')` to get secret.
+
 
 .yml file example
 =================
@@ -75,10 +75,14 @@ secrets:
 
 * **Renaldas Tauras** - *Initial work* - [trenaldas](https://github.com/trenaldas)
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
 ## Acknowledgments
 
 * Thanks to my tech team for ideas and support
+
+```
+  _   _           _           _   _           _
+ | | | |_   _ ___| |__       | | | |_   _ ___| |__
+ | |_| | | | / __| '_ \ _____| |_| | | | / __| '_ \
+ |  _  | |_| \__ \ | | |_____|  _  | |_| \__ \ | | |
+ |_| |_|\__,_|___/_| |_|     |_| |_|\__,_|___/_| |_|
+```
