@@ -4,7 +4,10 @@ namespace trenaldas\HushHush;
 
 use Aws\Exception\AwsException;
 use Aws\SecretsManager\SecretsManagerClient;
+use Exception;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Yaml\Yaml;
 
 class HushHush
@@ -16,7 +19,7 @@ class HushHush
     private $client;
 
     /** @var bool */
-    private $ymlFileExist = false;
+    private $ymlFileExist;
 
     public function __construct()
     {
@@ -36,17 +39,26 @@ class HushHush
      */
     public function setDatabaseLoginDetails()
     {
+        if ($this->testConnection()) {
+            return;
+        }
+
         if ($this->ymlFileExist) {
             $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
-            if (isset($hushHushYml['database']['connection']) &&
-                isset($hushHushYml['database']['environments'][App::environment()])) {
+            if (
+                isset($hushHushYml['database']['connection']) &&
+                isset($hushHushYml['database']['environments'][App::environment()]) &&
+                (config('hush-hush.database_option.config') || config('hush-hush.database_option.env_file'))
+            ) {
                 $secret = json_decode($this->openSecret($hushHushYml['database']['environments'][App::environment()]));
-                config(
-                    [
-                        'database.connections.' . $hushHushYml['database']['connection'] . '.username' => $secret->username,
-                        'database.connections.' . $hushHushYml['database']['connection'] . '.password' => $secret->password,
-                    ]
-                );
+
+                if (config('hush-hush.database_option.config')) {
+                    $this->useConfig($secret, $hushHushYml);
+                }
+
+                if (config('hush-hush.database_option.env_file')) {
+                    $this->useEnvFile($secret);
+                }
             }
         }
     }
@@ -69,9 +81,8 @@ class HushHush
     }
 
     /**
-     * @throws AwsException
-     *
      * @return false|mixed|string
+     * @throws AwsException
      */
     private function openSecret(string $secretName)
     {
@@ -81,7 +92,6 @@ class HushHush
                     'SecretId' => $secretName,
                 ]
             );
-
         } catch (AwsException $e) {
             $error = $e->getAwsErrorCode();
             if ($error == 'DecryptionFailureException') {
@@ -119,5 +129,52 @@ class HushHush
         }
 
         return $secret;
+    }
+
+    private function useConfig($secret, $hushHushYml) : void
+    {
+        config(
+            [
+                'database.connections.' . $hushHushYml['database']['connection'] . '.username' => $secret->username,
+                'database.connections.' . $hushHushYml['database']['connection'] . '.password' => $secret->password,
+            ]
+        );
+    }
+
+    private function useEnvFile($secret) : void
+    {
+        $envPath = base_path('.env');
+
+        if (file_exists($envPath)) {
+            file_put_contents(
+                $envPath,
+                str_replace(
+                    'DB_USERNAME=' . env('DB_USERNAME'),
+                    'DB_USERNAME=' . $secret->username,
+                    file_get_contents($envPath)
+                )
+            );
+            file_put_contents(
+                $envPath,
+                str_replace(
+                    'DB_PASSWORD=' . env('DB_PASSWORD'),
+                    'DB_PASSWORD=' . $secret->password,
+                    file_get_contents($envPath)
+                )
+            );
+
+            Artisan::call('config:clear');
+        }
+    }
+
+    private function testConnection() : bool
+    {
+        try {
+            DB::connection()->getPdo();
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 }

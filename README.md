@@ -21,10 +21,23 @@ After installing Hush-Hush Composer package, use command below:
     php artisan hush-hush:install
 
 This will publish config file to `config/hush-hush.php` and will create empty `hush-hush.yml`
-file in your root directory. By default it sets three different environments: local, staging and production.
-You can add, delete or edit environments inside `config/hush-hush.php` file.
+file in your root directory.
 
-All secrets created can be manually edited, deleted or added in `hush-hush.yml` file.
+
+Config File
+===========
+
+Config file has two variables:
+    
+    environments
+    database_option
+    
+Environment by default set to have two most common environments: `staging` and `production`.
+You should amend these accordingly with your project environment names.
+
+Database_option has two options of setting secret for a database: using config or changing values in .env file.
+First option is more secure and recommended in most cases. 
+Option to change the values in .env file useful when something else (like Laravel Telescope) uses .env values before appProvider. 
 
 Usage
 =====
@@ -40,7 +53,10 @@ Use command:
 Use command: 
     
     php artisan hush-hush:create_secret
-    
+
+All secrets created can be manually edited, deleted or added in `hush-hush.yml` file.
+
+   
 #### To get secrets anywhere in your code
 
 Use class HushHush function `unover('localSecretName')` to get secret.
@@ -57,13 +73,13 @@ database:
       staging: hush-hush-secret-staging
       production: hush-hush-secret-production
 secrets:
-  secret_name:
+  local_secret_name:
     local_name: app-secret
     environments:
       local: hush-hush-local
       staging: hush-hush-staging
       production: hush-hush-production
-  super_secret_name:
+  local_super_secret_name:
     local_name: my-api-login
     environments:
       local: hush-hush-super-local
@@ -86,3 +102,6 @@ secrets:
  |  _  | |_| \__ \ | | |_____|  _  | |_| \__ \ | | |
  |_| |_|\__,_|___/_| |_|     |_| |_|\__,_|___/_| |_|
 ```
+
+Some recommendations. If for any reason you have to reinstall the package,
+make sure `hush-hush.yml` file has no secrets under the environment you are re-installing it. 
