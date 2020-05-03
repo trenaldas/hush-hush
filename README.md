@@ -59,7 +59,7 @@ All secrets created can be manually edited, deleted or added in `hush-hush.yml` 
    
 #### To get secrets anywhere in your code
 
-Use class HushHush function `unover('localSecretName')` to get secret.
+Use class HushHush function `uncover('localSecretName')` to get secret.
 
 
 .yml file example

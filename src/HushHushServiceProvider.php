@@ -24,10 +24,6 @@ class HushHushServiceProvider extends ServiceProvider
                 CreateSecretCommand::class,
             ]
         );
-
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/hush-hush.php', 'hush-hush'
-        );
     }
 
     /**

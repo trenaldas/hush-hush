@@ -39,26 +39,27 @@ class HushHush
      */
     public function setDatabaseLoginDetails()
     {
-        if ($this->testConnection()) {
+        if ($this->testConnection() &&
+            $this->ymlFileExist &&
+            (config('hush-hush.database_option.env_file') ||
+                config('hush-hush.database_option.config'))
+        ){
             return;
         }
 
-        if ($this->ymlFileExist) {
-            $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
-            if (
-                isset($hushHushYml['database']['connection']) &&
-                isset($hushHushYml['database']['environments'][App::environment()]) &&
-                (config('hush-hush.database_option.config') || config('hush-hush.database_option.env_file'))
-            ) {
-                $secret = json_decode($this->openSecret($hushHushYml['database']['environments'][App::environment()]));
+        $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
+        if (
+            isset($hushHushYml['database']['connection']) &&
+            isset($hushHushYml['database']['environments'][App::environment()])
+        ) {
+            $secret = json_decode($this->openSecret($hushHushYml['database']['environments'][App::environment()]));
 
-                if (config('hush-hush.database_option.config')) {
-                    $this->useConfig($secret, $hushHushYml);
-                }
+            if (config('hush-hush.database_option.config')) {
+                $this->useConfig($secret, $hushHushYml);
+            }
 
-                if (config('hush-hush.database_option.env_file')) {
-                    $this->useEnvFile($secret);
-                }
+            if (config('hush-hush.database_option.env_file')) {
+                $this->useEnvFile($secret);
             }
         }
     }
