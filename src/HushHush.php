@@ -34,16 +34,13 @@ class HushHush
         );
     }
 
-    /**
-     * @return void
-     */
-    public function setDatabaseLoginDetails()
+    public function setDatabaseLoginDetails() : void
     {
-        if ($this->testConnection() &&
-            $this->ymlFileExist &&
-            (config('hush-hush.database_option.env_file') ||
-                config('hush-hush.database_option.config'))
-        ){
+        if ($this->testConnection() ||
+            ! $this->ymlFileExist ||
+            (! config('hush-hush.database_option.env_file') &&
+                ! config('hush-hush.database_option.config'))
+        ) {
             return;
         }
 
