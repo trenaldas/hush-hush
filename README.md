@@ -7,6 +7,8 @@ Hush-Hush For Laravel
 [![License](https://poser.pugx.org/trenaldas/hush-hush/license)](https://packagist.org/packages/trenaldas/hush-hush)
 [![Monthly Downloads](https://poser.pugx.org/trenaldas/hush-hush/d/monthly)](https://packagist.org/packages/trenaldas/hush-hush)
 
+Usage of versions bellow 1.2 is not recommended
+
 Composer package to help with AWS Secrets Manager service secrets (hush-hushes)
 
 Installation
@@ -27,17 +29,12 @@ file in your root directory.
 Config File
 ===========
 
-Config file has two variables:
+Config file has environment variable:
     
     environments
-    database_option
     
 Environment by default set to have two most common environments: `staging` and `production`.
 You should amend these accordingly with your project environment names.
-
-Database_option has two options of setting secret for a database: using config or changing values in .env file.
-First option is more secure and recommended in most cases. 
-Option to change the values in .env file useful when something else (like Laravel Telescope) uses .env values before appProvider. 
 
 Usage
 =====
@@ -91,10 +88,6 @@ secrets:
 
 * **Renaldas Tauras** - *Initial work* - [trenaldas](https://github.com/trenaldas)
 
-## Acknowledgments
-
-* Thanks to my tech team for ideas and support
-
 ```
   _   _           _           _   _           _
  | | | |_   _ ___| |__       | | | |_   _ ___| |__
@@ -104,4 +97,4 @@ secrets:
 ```
 
 Some recommendations. If for any reason you have to reinstall the package,
-make sure `hush-hush.yml` file has no secrets under the environment you are re-installing it. 
+make sure `hush-hush.yml` file has no secrets under the environment you are re-installing it.
