@@ -9,6 +9,8 @@ use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Yaml\Yaml;
 
 class HushHush
@@ -93,8 +95,8 @@ class HushHush
                     'SecretId' => $secretName,
                 ]
             );
-        } catch (CredentialsException|AwsException $e) {
-            echo 'Aws throws exception: ' . $e->getMessage();
+        } catch (CredentialsException|AwsException|ResourceNotFoundException $e) {
+            Log::error('Aws throws exception: ' . $e->getMessage());
 
             return false;
         }
