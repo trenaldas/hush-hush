@@ -15,7 +15,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class HushHush
 {
-    public string $hushHushYmlPath;
+    private string $hushHushYmlPath;
 
     private SecretsManagerClient $client;
 

@@ -52,7 +52,7 @@ Use command:
 
 Use command: 
     
-    php artisan hush-hush:create_secret
+    php artisan hush-hush:create-secret
 
 All secrets created can be manually edited, deleted or added in `hush-hush.yml` file.
 
