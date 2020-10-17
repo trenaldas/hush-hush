@@ -7,8 +7,6 @@ Hush-Hush For Laravel
 [![License](https://poser.pugx.org/trenaldas/hush-hush/license)](https://packagist.org/packages/trenaldas/hush-hush)
 [![Monthly Downloads](https://poser.pugx.org/trenaldas/hush-hush/d/monthly)](https://packagist.org/packages/trenaldas/hush-hush)
 
-Usage of versions bellow 1.2 is not recommended
-
 Composer package to help with AWS Secrets Manager service secrets (hush-hushes)
 
 Installation
