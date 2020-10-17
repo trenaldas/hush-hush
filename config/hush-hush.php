@@ -12,14 +12,4 @@ return [
         'staging',
         'production',
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Two different options to set database secret
-    |--------------------------------------------------------------------------
-    */
-    'database_option' => [
-        'env_file' => false,
-        'config'   => true,
-    ],
 ];

@@ -10,7 +10,7 @@
     ],
     "keywords": ["Laravel", "hush-hush", "Secrets", "Manager", "AWS", "aws-sdk"],
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "aws/aws-sdk-php": "^3.133",
         "symfony/yaml": "^5.0"
     },

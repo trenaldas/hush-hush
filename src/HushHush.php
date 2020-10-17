@@ -15,14 +15,11 @@ use Symfony\Component\Yaml\Yaml;
 
 class HushHush
 {
-    /** @var string */
-    public $hushHushYmlPath;
+    public string $hushHushYmlPath;
 
-    /** @var SecretsManagerClient */
-    private $client;
+    private SecretsManagerClient $client;
 
-    /** @var bool */
-    private $ymlFileExist;
+    private bool $ymlFileExist;
 
     public function __construct()
     {
@@ -39,15 +36,12 @@ class HushHush
 
     public function setDatabaseLoginDetails() : void
     {
-        if ($this->testConnection() ||
-            ! $this->ymlFileExist ||
-            (! config('hush-hush.database_option.env_file') &&
-                ! config('hush-hush.database_option.config'))
-        ) {
+        if ($this->testConnection()  || ! $this->ymlFileExist) {
             return;
         }
 
         $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
+
         if (
             isset($hushHushYml['database']['connection']) &&
             isset($hushHushYml['database']['environments'][App::environment()])
@@ -55,38 +49,28 @@ class HushHush
             $secret = json_decode($this->openSecret($hushHushYml['database']['environments'][App::environment()]));
 
             if ($secret) {
-                if (config('hush-hush.database_option.config')) {
-                    $this->useConfig($secret, $hushHushYml);
-                }
-
-                if (config('hush-hush.database_option.env_file')) {
-                    $this->useEnvFile($secret);
-                }
+                $this->setSecretForDatabase($secret, $hushHushYml);
             }
         }
     }
 
-    /**
-     * @return null|object
-     */
-    public function uncover(string $localSecretName)
+    public function uncover(string $localSecretName): object
     {
-        if ($this->ymlFileExist) {
-            $hushHushSecrets = Yaml::parseFile($this->hushHushYmlPath);
-            if (isset($hushHushSecrets['secrets'][$localSecretName])) {
-                $secret = $hushHushSecrets['secrets'][$localSecretName];
-
-                return json_decode($this->openSecret($secret[App::environment()]));
-            }
+        if (! $this->ymlFileExist) {
+            throw new Exception('hush-hush.yml file not found!');
         }
 
-        return null;
+        $hushHushSecrets = Yaml::parseFile($this->hushHushYmlPath);
+
+        if (! isset($hushHushSecrets['secrets'][$localSecretName])) {
+            throw new Exception('Secret was not found in hush-hush.yml file!');
+        }
+
+        $secret = $hushHushSecrets['secrets'][$localSecretName];
+
+        return json_decode($this->openSecret($secret[App::environment()]));
     }
 
-    /**
-     * @return false|mixed|string
-     * @throws AwsException
-     */
     private function openSecret(string $secretName)
     {
         try {
@@ -95,7 +79,7 @@ class HushHush
                     'SecretId' => $secretName,
                 ]
             );
-        } catch (CredentialsException|AwsException|ResourceNotFoundException $e) {
+        } catch (Exception $e) {
             Log::error('Aws throws exception: ' . $e->getMessage());
 
             return false;
@@ -112,7 +96,7 @@ class HushHush
         return $secret;
     }
 
-    private function useConfig($secret, $hushHushYml) : void
+    private function setSecretForDatabase(object $secret, array $hushHushYml) : void
     {
         config(
             [
@@ -120,32 +104,6 @@ class HushHush
                 'database.connections.' . $hushHushYml['database']['connection'] . '.password' => $secret->password,
             ]
         );
-    }
-
-    private function useEnvFile($secret) : void
-    {
-        $envPath = base_path('.env');
-
-        if (file_exists($envPath)) {
-            file_put_contents(
-                $envPath,
-                str_replace(
-                    'DB_USERNAME=' . env('DB_USERNAME'),
-                    'DB_USERNAME=' . $secret->username,
-                    file_get_contents($envPath)
-                )
-            );
-            file_put_contents(
-                $envPath,
-                str_replace(
-                    'DB_PASSWORD=' . env('DB_PASSWORD'),
-                    'DB_PASSWORD=' . $secret->password,
-                    file_get_contents($envPath)
-                )
-            );
-
-            Artisan::call('config:clear');
-        }
     }
 
     private function testConnection() : bool
