@@ -93,6 +93,3 @@ secrets:
  |  _  | |_| \__ \ | | |_____|  _  | |_| \__ \ | | |
  |_| |_|\__,_|___/_| |_|     |_| |_|\__,_|___/_| |_|
 ```
-
-Some recommendations. If for any reason you have to reinstall the package,
-make sure `hush-hush.yml` file has no secrets under the environment you are re-installing it.

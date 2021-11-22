@@ -1,11 +1,12 @@
 <?php
 
-namespace trenaldas\HushHush;
+namespace Trenaldas\HushHush;
 
 use Aws\SecretsManager\SecretsManagerClient;
 use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
 
@@ -71,7 +72,7 @@ class HushHush
         return json_decode($this->openSecret($secret[App::environment()]));
     }
 
-    /** @throws Exception  */
+    /** @throws Exception */
     private function openSecret(string $secretName): string
     {
         try {
@@ -82,7 +83,7 @@ class HushHush
             if (config('hush-hush.exception_throw')) {
                 throw new Exception($th->getMessage(), $th->getCode());
             }
-            echo 'AWS SM throws exception: ' . $th->getMessage();
+            Log::error('AWS SM throws exception: ' . $th->getMessage());
 
             return '';
         }

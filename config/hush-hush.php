@@ -16,7 +16,7 @@ return [
     /*
     |----------------------------------------------------------------------------
     | Throw exception if hush hush fails to get or set secret for db credentials.
-    | If set to false - exception will be echoed only.
+    | If set to false - exception will be logged only.
     |----------------------------------------------------------------------------
     */
     'exception_throw' => env('HUSH_HUSH_THROW_EXCEPTION', false),
@@ -28,5 +28,5 @@ return [
     | if not - tries to get secret.
     |----------------------------------------------------------------------------
     */
-    'every_request' => env('HUSH_HUSH_THROW_EXCEPTION', false),
+    'every_request' => env('HUSH_HUSH_THROW_EXCEPTION', true),
 ];

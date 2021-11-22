@@ -1,6 +1,6 @@
 <?php
 
-namespace trenaldas\HushHush;
+namespace Trenaldas\HushHush;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -8,7 +8,7 @@ class HushHushServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->make('trenaldas\HushHush\HushHush');
+        $this->app->make('Trenaldas\HushHush\HushHush');
 
         $this->commands([
             InstallCommand::class,

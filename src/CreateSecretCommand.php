@@ -1,6 +1,6 @@
 <?php
 
-namespace trenaldas\HushHush;
+namespace Trenaldas\HushHush;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Yaml\Yaml;
@@ -25,9 +25,8 @@ class CreateSecretCommand extends Command
         $secretName   = $this->ask('Enter local name for your secret');
 
         $this->comment('Enter AWS secret name for different environments:');
-        foreach ($environments as $environment)
-        {
-            $hushHushYml['secrets'][$secretName][$environment] = $this->ask("{$environment}");
+        foreach ($environments as $environment) {
+            $hushHushYml['secrets'][$secretName][$environment] = $this->ask($environment);
         }
 
         file_put_contents(

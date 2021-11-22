@@ -1,6 +1,6 @@
 <?php
 
-namespace trenaldas\HushHush;
+namespace Trenaldas\HushHush;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Yaml\Yaml;
@@ -24,7 +24,10 @@ class InstallCommand extends Command
         $this->callSilent('vendor:publish', ['--tag' => 'hush-hush-config']);
 
         $this->comment('----------------------------------------------------');
-        $this->comment('- Check config/hush-hush.php file for environments -');
+        $this->comment('| Check config/hush-hush.php file                  |');
+        $this->comment('| Use the following commands to set secrets        |');
+        $this->comment('| php artisan hush-hush:database                   |');
+        $this->comment('| php artisan hush-hush:create-secret              |');
         $this->comment('----------------------------------------------------');
 
         $this->comment('
