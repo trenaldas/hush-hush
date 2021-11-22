@@ -7,26 +7,13 @@ use Symfony\Component\Yaml\Yaml;
 
 class CreateSecretCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $signature = 'hush-hush:create-secret';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $description = 'Create secret to use in your application';
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
-    public function handle()
+    public function handle(): void
     {
         if (! file_exists(base_path() . '/hush-hush.yml')) {
             $this->comment('File hush-hush.yml does not exist. Run command php artisan hush-hush:install');
