@@ -1,6 +1,6 @@
 <?php
 
-namespace Trenaldas\HushHush;
+namespace trenaldas\HushHush;
 
 use Aws\SecretsManager\SecretsManagerClient;
 use Exception;
