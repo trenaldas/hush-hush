@@ -8,7 +8,7 @@ class HushHushServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->make('Trenaldas\HushHush\HushHush');
+//        $this->app->make(HushHush::class);
 
         $this->commands([
             InstallCommand::class,
