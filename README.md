@@ -84,7 +84,7 @@ secrets:
 
 ## Authors
 
-* **Renaldas Tauras** - *Initial work* - [trenaldas](https://github.com/trenaldas)
+* **Renaldas Tauras** - [trenaldas](https://github.com/trenaldas)
 
 ```
   _   _           _           _   _           _

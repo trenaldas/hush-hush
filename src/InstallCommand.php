@@ -7,26 +7,13 @@ use Symfony\Component\Yaml\Yaml;
 
 class InstallCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $signature = 'hush-hush:install';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $description = 'Installs and publishes Hush-Hush resources';
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
-    public function handle()
+    public function handle(): void
     {
         if (! file_exists(base_path() . '/hush-hush.yml')) {
             $this->comment('Creating hush-hush.yml file in your root directory');

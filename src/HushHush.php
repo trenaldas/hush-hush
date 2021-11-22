@@ -2,51 +2,50 @@
 
 namespace trenaldas\HushHush;
 
-use Aws\Exception\AwsException;
-use Aws\Exception\CredentialsException;
 use Aws\SecretsManager\SecretsManagerClient;
 use Exception;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Yaml\Yaml;
+use Throwable;
 
 class HushHush
 {
-    private string $hushHushYmlPath;
-
     private SecretsManagerClient $client;
-
-    private bool $ymlFileExist;
+    private bool                 $ymlFileExist;
+    private string               $hushHushYmlPath;
 
     public function __construct()
     {
         $this->hushHushYmlPath = base_path() . '/hush-hush.yml';
         $this->ymlFileExist    = file_exists($this->hushHushYmlPath);
 
-        $this->client = new SecretsManagerClient(
-            [
-                'version' => '2017-10-17',
-                'region'  => env('AWS_DEFAULT_REGION', 'eu-west-1'),
-            ]
-        );
+        $this->client = new SecretsManagerClient([
+            'version' => '2017-10-17',
+            'region'  => env('AWS_DEFAULT_REGION', 'eu-west-1'),
+        ]);
     }
 
-    public function setDatabaseLoginDetails() : void
+    public function setDatabaseLoginDetails(): void
     {
-        if ($this->testConnection()  || ! $this->ymlFileExist) {
+        if (! $this->ymlFileExist
+            || ! in_array(App::environment(), config('hush-hush.environments'))
+        ) {
+            return;
+        }
+
+        if (! config('hush-hush.every_request') && $this->testConnection()) {
             return;
         }
 
         $hushHushYml = Yaml::parseFile($this->hushHushYmlPath);
 
-        if (
-            isset($hushHushYml['database']['connection']) &&
-            isset($hushHushYml['database']['environments'][App::environment()])
+        if (isset($hushHushYml['database']['connection'])
+            && isset($hushHushYml['database']['environments'][App::environment()])
         ) {
-            $secret = json_decode($this->openSecret($hushHushYml['database']['environments'][App::environment()]));
+            $secret = json_decode(
+                $this->openSecret($hushHushYml['database']['environments'][App::environment()])
+            );
 
             if ($secret) {
                 $this->setSecretForDatabase($secret, $hushHushYml);
@@ -54,6 +53,7 @@ class HushHush
         }
     }
 
+    /** @throws Exception */
     public function uncover(string $localSecretName): object
     {
         if (! $this->ymlFileExist) {
@@ -71,39 +71,33 @@ class HushHush
         return json_decode($this->openSecret($secret[App::environment()]));
     }
 
-    private function openSecret(string $secretName)
+    /** @throws Exception  */
+    private function openSecret(string $secretName): string
     {
         try {
-            $result = $this->client->getSecretValue(
-                [
-                    'SecretId' => $secretName,
-                ]
-            );
-        } catch (Exception $e) {
-            Log::error('Aws throws exception: ' . $e->getMessage());
+            $result = $this->client->getSecretValue([
+                'SecretId' => $secretName,
+            ]);
+        } catch (Throwable $th) {
+            if (config('hush-hush.exception_throw')) {
+                throw new Exception($th->getMessage(), $th->getCode());
+            }
+            echo 'AWS SM throws exception: ' . $th->getMessage();
 
-            return false;
+            return '';
         }
 
         // Decrypts secret using the associated KMS CMK.
         // Depending on whether the secret is a string or binary, one of these fields will be populated.
-        if (isset($result['SecretString'])) {
-            $secret = $result['SecretString'];
-        } else {
-            $secret = base64_decode($result['SecretBinary']);
-        }
-
-        return $secret;
+        return $result['SecretString'] ?? base64_decode($result['SecretBinary']);
     }
 
-    private function setSecretForDatabase(object $secret, array $hushHushYml) : void
+    private function setSecretForDatabase(object $secret, array $hushHushYml): void
     {
-        config(
-            [
-                'database.connections.' . $hushHushYml['database']['connection'] . '.username' => $secret->username,
-                'database.connections.' . $hushHushYml['database']['connection'] . '.password' => $secret->password,
-            ]
-        );
+        config([
+            'database.connections.'.$hushHushYml['database']['connection'].'.username' => $secret->username,
+            'database.connections.'.$hushHushYml['database']['connection'].'.password' => $secret->password,
+        ]);
     }
 
     private function testConnection() : bool
